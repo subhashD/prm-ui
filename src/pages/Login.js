@@ -6,15 +6,11 @@ import { Logo } from '../components'
 import FormRow from '../components/FormRow'
 
 const initialState = {
-  firstname: '',
-  lastname: '',
   email: '',
   password: '',
-  confirmPassword: '',
-  isMember: true,
 }
 
-const Register = () => {
+const Login = () => {
   const [values, setValues] = useState(initialState)
   // redux toolkit and useNavigate later
 
@@ -26,15 +22,12 @@ const Register = () => {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const { firstname, lastname, email, password, confirmPassword } = values
-    if (!firstname || !lastname || !email || !password || !confirmPassword) {
+    const { email, password } = values
+    if (!email || !password) {
       toast.error('Please Fill Out All Fields')
       return
-    } else if (password !== confirmPassword) {
-      toast.error('Password and confirm password doesn`t match!!')
-      return
     } else {
-      console.log('Validated...Submitting..')
+      console.log('Submitting..')
     }
   }
 
@@ -42,23 +35,7 @@ const Register = () => {
     <Wrapper className='full-page'>
       <form className='form' onSubmit={onSubmit}>
         <Logo />
-        <h3>Register</h3>
-
-        {/* firstname field */}
-        <FormRow
-          type='text'
-          name='firstname'
-          value={values.firstname}
-          handleChange={handleChange}
-        />
-
-        {/* lastname field */}
-        <FormRow
-          type='text'
-          name='lastname'
-          value={values.lastname}
-          handleChange={handleChange}
-        />
+        <h3>Login</h3>
 
         {/* email field */}
         <FormRow
@@ -76,23 +53,14 @@ const Register = () => {
           handleChange={handleChange}
         />
 
-        {/* confirmPassword field */}
-        <FormRow
-          type='password'
-          name='confirmPassword'
-          value={values.confirmPassword}
-          handleChange={handleChange}
-          labelText='confirm Password'
-        />
-
         <button type='submit' className='btn btn-block'>
           submit
         </button>
 
         <p>
-          {'Already a member? '}
-          <Link to='/login' className='member-btn'>
-            Login
+          {'Not a member? '}
+          <Link to='/register' className='member-btn'>
+            Register
           </Link>
         </p>
       </form>
@@ -100,4 +68,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default Login
