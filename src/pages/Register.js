@@ -4,6 +4,8 @@ import { toast } from 'react-toastify'
 import Wrapper from '../assets/wrappers/RegisterPage'
 import { Logo } from '../components'
 import FormRow from '../components/FormRow'
+import { useSelector, useDispatch } from 'react-redux'
+import { registerUser } from '../features/user/userSlice'
 
 const initialState = {
   firstname: '',
@@ -15,6 +17,9 @@ const initialState = {
 }
 
 const Register = () => {
+  const dispatch = useDispatch()
+  const { isLoading, user } = useSelector((store) => store.user)
+
   const [values, setValues] = useState(initialState)
   // redux toolkit and useNavigate later
 
@@ -34,7 +39,7 @@ const Register = () => {
       toast.error('Password and confirm password doesn`t match!!')
       return
     } else {
-      console.log('Validated...Submitting..')
+      dispatch(registerUser({ firstname, lastname, email, password }))
     }
   }
 
@@ -85,7 +90,7 @@ const Register = () => {
           labelText='confirm Password'
         />
 
-        <button type='submit' className='btn btn-block'>
+        <button type='submit' className='btn btn-block' disabled={isLoading}>
           submit
         </button>
 

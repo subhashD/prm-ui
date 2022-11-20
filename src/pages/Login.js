@@ -4,15 +4,33 @@ import { toast } from 'react-toastify'
 import Wrapper from '../assets/wrappers/RegisterPage'
 import { Logo } from '../components'
 import FormRow from '../components/FormRow'
-
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { loginUser } from '../features/user/userSlice'
 const initialState = {
   email: '',
   password: '',
 }
 
 const Login = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { isLoading, user } = useSelector((store) => store.user)
   const [values, setValues] = useState(initialState)
   // redux toolkit and useNavigate later
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate('/')
+      }, 3000)
+    }
+  }, [user, navigate])
+
+  useEffect(() => {
+    if (user) {
+      navigate('/')
+    }
+  }, [])
 
   const handleChange = (e) => {
     const name = e.target.name
@@ -27,7 +45,7 @@ const Login = () => {
       toast.error('Please Fill Out All Fields')
       return
     } else {
-      console.log('Submitting..')
+      dispatch(loginUser({ email, password }))
     }
   }
 
@@ -53,8 +71,8 @@ const Login = () => {
           handleChange={handleChange}
         />
 
-        <button type='submit' className='btn btn-block'>
-          submit
+        <button type='submit' className='btn btn-block' disabled={isLoading}>
+          {isLoading ? 'Loading...' : 'Submit'}
         </button>
 
         <p>
