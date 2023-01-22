@@ -1,7 +1,18 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Landing, Register, Login, Dashboard, Error } from './pages'
+import {
+  ProtectedRoute,
+  Landing,
+  Error,
+  Register,
+  Login,
+  SharedLayout,
+  Contacts,
+  AddContact,
+  Stats,
+  Profile,
+} from './pages'
 
 function App() {
   return (
@@ -19,7 +30,20 @@ function App() {
         theme='light'
       />
       <Routes>
-        <Route path='/' element={<Dashboard />} />
+        <Route
+          path='/'
+          element={
+            <ProtectedRoute>
+              <SharedLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Stats />} />
+          <Route path='profile' element={<Profile />} />
+          <Route path='contacts' element={<Contacts />} />
+          <Route path='contacts/create' element={<AddContact />} />
+          <Route path='contacts/edit' element={<AddContact />} />
+        </Route>
         <Route path='/landing' element={<Landing />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />

@@ -5,6 +5,7 @@ import Wrapper from '../assets/wrappers/RegisterPage'
 import { Logo } from '../components'
 import FormRow from '../components/FormRow'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../features/user/userSlice'
 
 const initialState = {
@@ -17,8 +18,23 @@ const initialState = {
 }
 
 const Register = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { isLoading, user } = useSelector((store) => store.user)
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    }
+  }, [user, navigate])
+
+  useEffect(() => {
+    if (user) {
+      navigate('/')
+    }
+  }, [])
 
   const [values, setValues] = useState(initialState)
   // redux toolkit and useNavigate later
