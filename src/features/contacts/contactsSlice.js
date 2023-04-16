@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 import customFetch from '../../utils/axios'
+import { logoutUser } from '../user/userSlice'
 
 const initialFiltersState = {
   search: '',
@@ -30,6 +31,9 @@ export const getContacts = createAsyncThunk(
       const resp = await customFetch.get(url)
       return resp.data
     } catch (error) {
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logoutUser('Unauthorized! Logging Out...'))
+      }
       return thunkAPI.rejectWithValue(error.response.data.msg)
     }
   }

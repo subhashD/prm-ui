@@ -6,6 +6,9 @@ import FormRow from './FormRow'
 import FormRowSelect from './FormRowSelect'
 import SearchContainer from './SearchContainer'
 import ContactsContainer from './ContactsContainer'
+import ChatBox from './ChatBox'
+import MyChats from './MyChats'
+import ChatLoading from './ChatLoading'
 export {
   Logo,
   Navbar,
@@ -15,4 +18,7 @@ export {
   FormRowSelect,
   SearchContainer,
   ContactsContainer,
+  MyChats,
+  ChatBox,
+  ChatLoading,
 }

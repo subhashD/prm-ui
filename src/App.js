@@ -12,6 +12,7 @@ import {
   AddContact,
   Stats,
   Profile,
+  Chats,
 } from './pages'
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
         >
           <Route index element={<Stats />} />
           <Route path='profile' element={<Profile />} />
+          <Route path='chats' element={<Chats />} />
           <Route path='contacts' element={<Contacts />} />
           <Route path='contacts/create' element={<AddContact />} />
           <Route path='contacts/edit' element={<AddContact />} />

@@ -26,11 +26,11 @@ const Login = () => {
     }
   }, [user, navigate])
 
-  useEffect(() => {
-    if (user) {
-      navigate('/')
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate('/')
+  //   }
+  // }, [])
 
   const handleChange = (e) => {
     const name = e.target.name

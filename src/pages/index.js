@@ -6,6 +6,7 @@ import SharedLayout from './SharedLayout'
 import { Contacts, AddContact } from './contact'
 import { Stats } from './dashboard'
 import { Profile } from './profile'
+import { Chats } from './chats'
 import ProtectedRoute from './ProtectedRoute'
 export {
   ProtectedRoute,
@@ -18,4 +19,5 @@ export {
   AddContact,
   Stats,
   Profile,
+  Chats,
 }

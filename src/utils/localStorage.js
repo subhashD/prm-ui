@@ -11,3 +11,7 @@ export const getUserFromLocalStorage = () => {
   const user = result ? JSON.parse(result) : null
   return user
 }
+
+export const addStaticDataToLocalStorage = (key, data) => {
+  localStorage.setItem(key, JSON.stringify(data))
+}

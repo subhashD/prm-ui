@@ -37,11 +37,14 @@ const initialState = {
 export const createContact = createAsyncThunk(
   'contact/createContact',
   async (contact, thunkAPI) => {
+    thunkAPI.dispatch(showLoading())
     try {
       const resp = await customFetch.post('/contacts/create', contact)
+      thunkAPI.dispatch(hideLoading())
       thunkAPI.dispatch(clearValues())
       return resp.data
     } catch (error) {
+      thunkAPI.dispatch(hideLoading())
       if (error.response.status === 401) {
         thunkAPI.dispatch(logoutUser('Unauthorized! Logging Out...'))
         return thunkAPI.rejectWithValue('Unauthorized! Logging Out...')
@@ -54,16 +57,31 @@ export const createContact = createAsyncThunk(
 export const deleteContact = createAsyncThunk(
   'contact/deleteContact',
   async (contactId, thunkAPI) => {
+    thunkAPI.dispatch(showLoading())
     try {
       const resp = await customFetch.delete(`/contacts/${contactId}`)
       thunkAPI.dispatch(getContacts())
       return resp.data
     } catch (error) {
+      thunkAPI.dispatch(hideLoading())
       if (error.response.status === 401) {
         thunkAPI.dispatch(logoutUser('Unauthorized! Logging Out...'))
         return thunkAPI.rejectWithValue('Unauthorized! Logging Out...')
       }
       return thunkAPI.rejectWithValue(error.response.data.message)
+    }
+  }
+)
+
+export const editContact = createAsyncThunk(
+  'contact/editContact',
+  async ({ contactId, contact }, thunkAPI) => {
+    try {
+      const resp = await customFetch.patch(`/contacts/${contactId}`, contact)
+      thunkAPI.dispatch(clearValues())
+      return resp.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg)
     }
   }
 )
@@ -97,6 +115,19 @@ const contactSlice = createSlice({
         toast.success(`${message}`)
       })
       .addCase(createContact.rejected, (state, { payload }) => {
+        state.isLoading = false
+        toast.error(payload)
+      })
+      .addCase(editContact.pending, (state) => {
+        state.isLoading = true
+      })
+      // You can chain calls, or have separate `builder.addCase()` lines each time
+      .addCase(editContact.fulfilled, (state, { payload }) => {
+        const { message } = payload
+        state.isLoading = false
+        toast.success(`${message}`)
+      })
+      .addCase(editContact.rejected, (state, { payload }) => {
         state.isLoading = false
         toast.error(payload)
       })

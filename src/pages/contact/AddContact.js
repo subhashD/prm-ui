@@ -6,6 +6,7 @@ import {
   handleChange,
   clearValues,
   createContact,
+  editContact,
 } from '../../features/contact/contactSlice'
 
 const AddContact = () => {
@@ -18,7 +19,8 @@ const AddContact = () => {
     lastname,
     nickname,
     description,
-    gender,
+    genderId,
+    genderTitle,
     is_birthdate_known,
     birthdate_day,
     birthdate_month,
@@ -33,9 +35,9 @@ const AddContact = () => {
     deceased_date_is_age_based,
     deceased_age,
   } = useSelector((store) => {
-    console.log(store)
     return store.contact
   })
+
   const dispatch = useDispatch()
 
   const handleSubmit = (e) => {
@@ -45,8 +47,21 @@ const AddContact = () => {
     //   toast.error('Please Fill Out required Fields')
     //   return
     // }
-
-    dispatch(createContact({ firstname, middlename, lastname }))
+    if (isEditing) {
+      dispatch(
+        editContact({
+          contactId: editContactId,
+          contact: {
+            firstname,
+            middlename,
+            lastname,
+            genderId,
+          },
+        })
+      )
+    } else {
+      dispatch(createContact({ firstname, middlename, lastname }))
+    }
   }
   const handleContactInput = (e) => {
     const name = e.target.name
@@ -85,7 +100,7 @@ const AddContact = () => {
           {/* gender status */}
           <FormRowSelect
             name='gender'
-            value={gender}
+            value={genderId}
             handleChange={handleContactInput}
             list={[]}
           />

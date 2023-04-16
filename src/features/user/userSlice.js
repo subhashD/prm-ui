@@ -1,16 +1,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import customFetch from '../../utils/axios'
 import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import {
   addUserToLocalStorage,
   getUserFromLocalStorage,
   removeUserFromLocalStorage,
+  addStaticDataToLocalStorage,
 } from '../../utils/localStorage'
+import { getCountries } from '../country/countrySlice'
+import { getGenders } from '../gender/genderSlice'
 
 const initialState = {
   isLoading: false,
   isSidebarOpen: false,
   user: getUserFromLocalStorage(),
+  userSearchResults: [],
 }
 
 export const registerUser = createAsyncThunk(
@@ -31,7 +37,6 @@ export const loginUser = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const resp = await customFetch.post('/auth/login', user)
-      console.log(resp)
       return resp.data
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.message)
@@ -55,12 +60,31 @@ export const updateUser = createAsyncThunk(
   }
 )
 
+export const searchUser = createAsyncThunk(
+  'user/searchUser',
+  async (search, thunkAPI) => {
+    try {
+      const resp = await customFetch.get(`/user/users?search=${search}`)
+      return resp.data
+    } catch (error) {
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logoutUser('Unauthorized! Logging Out...'))
+        return thunkAPI.rejectWithValue('Unauthorized! Logging Out...')
+      }
+      return thunkAPI.rejectWithValue(error.response.data.message)
+    }
+  }
+)
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen
+    },
+    emptyUserSearchResults: (state) => {
+      state.userSearchResults = []
     },
     logoutUser: (state, { payload }) => {
       state.user = null
@@ -101,6 +125,10 @@ const userSlice = createSlice({
         state.user = user
         addUserToLocalStorage(user)
         toast.success(`Welcome ${user.firstname}`)
+
+        // const genders = useDispatch(getGenders())
+        // var countries = getCountries()
+        // addStaticDataToLocalStorage()
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
         state.isLoading = false
@@ -122,9 +150,21 @@ const userSlice = createSlice({
         state.isLoading = false
         toast.error(payload)
       })
+      .addCase(searchUser.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(searchUser.fulfilled, (state, { payload }) => {
+        state.userSearchResults = payload.data
+        state.isLoading = false
+      })
+      .addCase(searchUser.rejected, (state, { payload }) => {
+        state.isLoading = false
+        // toast.error(payload)
+      })
   },
 })
 
-export const { toggleSidebar, logoutUser } = userSlice.actions
+export const { toggleSidebar, logoutUser, emptyUserSearchResults } =
+  userSlice.actions
 
 export default userSlice.reducer
