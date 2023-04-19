@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/layout'
 import MyChats from '../../components/MyChats'
 import ChatBox from '../../components/ChatBox'
+
 const Chats = () => {
   return (
     <>

@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { toggleSidebar, logoutUser } from './../features/user/userSlice'
 import { clearValues } from '../features/contact/contactSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import { BellIcon } from '@chakra-ui/icons'
 
 const Navbar = () => {
   const { user } = useSelector((store) => store.user)
@@ -29,20 +31,33 @@ const Navbar = () => {
           <Logo />
           <h3 className='logo-text'>dashboard</h3>
         </div>
+
         <div className='btn-container'>
-          <button
-            type='button'
-            className='btn'
-            onClick={() => setShowLogout(!showLogout)}
-          >
-            <FaUserCircle />
-            {user?.name}
-            <FaCaretDown />
-          </button>
-          <div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'}>
-            <button type='button' className='dropdown-btn' onClick={logout}>
-              logout
+          <div>
+            <Menu>
+              <MenuButton p={1}>
+                <BellIcon fontSize={'2xl'} m={1} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem>Test notification</MenuItem>
+              </MenuList>
+            </Menu>
+          </div>
+          <div className='logout-dropdown'>
+            <button
+              type='button'
+              className='btn'
+              onClick={() => setShowLogout(!showLogout)}
+            >
+              <FaUserCircle />
+              {user?.name}
+              <FaCaretDown />
             </button>
+            <div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'}>
+              <button type='button' className='dropdown-btn' onClick={logout}>
+                logout
+              </button>
+            </div>
           </div>
         </div>
       </div>

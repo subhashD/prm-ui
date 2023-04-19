@@ -68,16 +68,7 @@ const NewChatModal = ({ children, isGroupChat }) => {
   }
 
   const handleClick = (userToAdd) => {
-    const userExists = chats.find(
-      (sel) =>
-        sel.isGroupChat === false &&
-        sel.users.find((user) => user.id === userToAdd.id)
-    )
-    if (userExists) {
-      dispatch(accessPersonalChat(userToAdd.id))
-    } else {
-      dispatch(addNewChat(userToAdd))
-    }
+    dispatch(accessPersonalChat(userToAdd.id))
     closeModal()
   }
 

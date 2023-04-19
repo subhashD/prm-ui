@@ -27,7 +27,7 @@ export const fetchMessages = createAsyncThunk(
 
 export const sendMessage = createAsyncThunk(
   'messages/sendMessage',
-  async ({ chatId, content }, thunkAPI) => {
+  async ({ chatId, content, webSocket }, thunkAPI) => {
     let url = `/chat/${chatId}/message`
 
     try {
@@ -47,7 +47,8 @@ const chatsSlice = createSlice({
   initialState,
   reducers: {
     setMessages: (state, { payload }) => {
-      state.messages = [...state.messages, payload]
+      const isFound = state.messages.find((m) => m.id === payload.id)
+      if (!isFound) state.messages = [...state.messages, payload]
     },
   },
   extraReducers: (builder) => {
@@ -67,8 +68,10 @@ const chatsSlice = createSlice({
       .addCase(sendMessage.pending, (state) => {
         state.isLoading = true
       })
-      .addCase(sendMessage.fulfilled, (state, { payload }) => {
+      .addCase(sendMessage.fulfilled, (state, { meta, payload }) => {
         state.isLoading = false
+        const { webSocket } = meta.arg
+        webSocket.emit('new-message', payload.data)
         if (payload.data) state.messages = [...state.messages, payload.data]
       })
       .addCase(sendMessage.rejected, (state, { payload }) => {

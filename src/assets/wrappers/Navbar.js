@@ -29,6 +29,12 @@ const Wrapper = styled.nav`
   background: var(--white);
   .btn-container {
     position: relative;
+    display: flex;
+  }
+  .logout-dropdown {
+    display: block;
+    align-self: center;
+    padding-left: 1em;
   }
   .btn {
     display: flex;
